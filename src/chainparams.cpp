@@ -22,8 +22,8 @@ const arith_uint256 maxUint = UintToArith256(
         uint256S("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"));
 
 static void MineGenesis(CBlockHeader &genesisBlock, const uint256 &powLimit, bool noProduction) {
-    if (noProduction) genesisBlock.nTime = std::time(0);
-    genesisBlock.nNonce = 0;
+    if (noProduction) genesisBlock.nTime = std::time(nullptr);
+    genesisBlock.nNonce = std::time(nullptr);
 
     printf("NOTE: Genesis nTime = %u \n", genesisBlock.nTime);
     printf("WARN: Genesis nNonce (BLANK!) = %u \n", genesisBlock.nNonce);
@@ -41,7 +41,7 @@ static void MineGenesis(CBlockHeader &genesisBlock, const uint256 &powLimit, boo
         }
         // If nothing found after trying for a while, print status
         if ((genesisBlock.nNonce & 0xffff) == 0)
-            printf("nonce %08X: hash = %s \r",
+            printf("nonce %08X: hash = %s target=%s \r",
                    genesisBlock.nNonce, newhash.ToString().c_str(),
                    hashTarget.ToString().c_str());
 
@@ -151,7 +151,7 @@ public:
         m_assumed_blockchain_size = 350;
         m_assumed_chain_state_size = 6;
 
-        genesis = CreateGenesisBlock(1231006505, 2083236893, 0x1d00ffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(std::time(nullptr), 2083236893, 0x1d00ffff, 1, 50 * COIN);
         MineGenesis(genesis, consensus.powLimit, true);
         consensus.hashGenesisBlock = genesis.GetHash();
         assert(consensus.hashGenesisBlock == uint256S("0x000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"));
